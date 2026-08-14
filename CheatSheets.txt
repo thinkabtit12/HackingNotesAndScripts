@@ -4,3 +4,13 @@ Quick Web Status Code Reader for Gobuster:
 - 403 = Forbidden / The page exists, but your IP is blocked.
 - 404 = Not Found / Page does not exist.
 - 400 / 500 = Server Error / Malformed request or broken backend. (IGNORE)
+
+
+HOW TO SCAN FOR DEVELOPER MAILBOXES (MailHog/Webmail Hunt)
+Command: nmap -p 8025 <TARGET_IP>
+What it does: Checks if the target environment exposes a MailHog testing dashboard.
+- Port 8025 = Default web UI for MailHog. If open, browse to http://<TARGET_IP>:8025 to read internal system emails (password resets, user registrations) without a login.
+
+HOW TO EXTRACT REUSABLE CREDENTIAL PATTERNS
+Strategy: When you find low-level system passwords (like IMAP_PASSWORD or DB_PASSWORD) in a config file, always document them to test for "Credential Stuffing/Password Reuse" across every open login panel and SSH.
+

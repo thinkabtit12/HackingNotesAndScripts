@@ -26,3 +26,6 @@ xxd <FILENAME> | head -n 20
 
 quick read command
 head -n <LINE_COUNT> <FILE_NAME>
+
+netcat start listen command
+nc -lnvp <PORT>

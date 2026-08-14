@@ -1,4 +1,16 @@
 nmap scanner command:
 nmap -p- --min-rate 2000 -v <TARGET_IP>
 
+nmap port information command:
+nmap -sC -sV -p (port1),(port2 and so on) <TARGET_IP>
 
+web server redirect finder command:
+curl -I http://<TARGET_IP>
+
+link DNS to IP command:
+sudo nano /etc/hosts
+(scroll to the very bottom of the file, paste your target IP, press Tab, and then paste the DNS you link it to.)
+
+hidden subdomains finder command:
+gobuster vhost -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt --append-domain
+(every subdomain found here must be booked via "link DNS to IP command")

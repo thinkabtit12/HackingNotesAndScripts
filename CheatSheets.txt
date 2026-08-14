@@ -1,10 +1,10 @@
 Quick Web Status Code Reader for Gobuster:
-- 200 = Success / Page exists and is fully viewable. (JACKPOT)
-- 301 / 302 = Redirect / The server is bouncing you to a new URL. (FOLLOW IT)
-- 403 = Forbidden / The page exists, but your IP is blocked.
-- 404 = Not Found / Page does not exist.
-- 400 / 500 = Server Error / Malformed request or broken backend. (IGNORE)
-
+- 200 OK: Success. The page exists and is fully viewable. (JACKPOT: Enumerate for forms, versions, and comments)
+- 301 / 302 / 307 Redirect: Bouncing you to a new URL. (FOLLOW IT: Look at the Location header to find hidden domains or login portals)
+- 403 Forbidden: The page exists, but access is denied. (INVESTIGATE: Try bypassing with custom headers like X-Forwarded-For or changing HTTP methods)
+- 500 Internal Server Error: The backend crashed. (THE REAL JACKPOT: You broke the logic. High chance of SQL Injection, Command Injection, or File Inclusion)
+- 400 Bad Request: Malformed request. (FUZZ IT: The API endpoint exists, you just need to fuzz for the correct parameters or JSON payload)
+- 404 Not Found: Page does not exist. (IGNORE: Safe to skip)
 
 HOW TO SCAN FOR DEVELOPER MAILBOXES (MailHog/Webmail Hunt)
 Command: nmap -p 8025 <TARGET_IP>

@@ -1,0 +1,6 @@
+Quick Web Status Code Reader for Gobuster:
+- 200 = Success / Page exists and is fully viewable. (JACKPOT)
+- 301 / 302 = Redirect / The server is bouncing you to a new URL. (FOLLOW IT)
+- 403 = Forbidden / The page exists, but your IP is blocked.
+- 404 = Not Found / Page does not exist.
+- 400 / 500 = Server Error / Malformed request or broken backend. (IGNORE)

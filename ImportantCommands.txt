@@ -1,0 +1,4 @@
+nmap scanner command:
+nmap -p- --min-rate 5000 -v <TARGET_IP>
+
+

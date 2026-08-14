@@ -24,5 +24,5 @@ universal raw byte hex analyzer command:
 xxd <FILENAME> | head -n 20
 (for when u cant read a file at all)
 
-php reverse shell script command:
+php reverse shell quick read script command:
 head -n 60 php-reverse-shell.php

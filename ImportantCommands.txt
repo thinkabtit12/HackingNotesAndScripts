@@ -14,6 +14,7 @@ sudo nano /etc/hosts
 hidden subdomains finder command:
 gobuster vhost -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt --append-domain
 (every subdomain found here must be booked via "link DNS to IP command")
+(using dir instead of vhost is also an alternative if you find no results using vhost)
 
 check if targets running an active imap email service
 nmap -p 143,993 <TARGET_IP>

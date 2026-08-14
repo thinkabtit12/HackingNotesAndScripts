@@ -18,6 +18,8 @@ gobuster vhost -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt --appe
 e.g. cool.com/example/. also removing --append-domain since its exclusive to vhost mode)
 gobuster dir -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt
 
+(if basically zero results, use medium.txt instead of common.txt)
+
 
 check if targets running an active imap email service
 nmap -p 143,993 <TARGET_IP>

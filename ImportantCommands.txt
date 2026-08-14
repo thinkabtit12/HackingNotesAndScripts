@@ -17,6 +17,8 @@ gobuster vhost -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt --appe
 (there is another version of this command using dir as the second word instead of vhost. in every website case, both should be used. vhost scans for subdomains e.g. example.cool.com while dir scans for endpoints inside the site 
 e.g. cool.com/example/. also removing --append-domain since its exclusive to vhost mode)
 gobuster dir -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt
+(mask your traffic to impersonate a normal browser by adding a -a flag)
+(and add after it for example "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
 (if basically zero results, use medium.txt instead of common.txt)
 

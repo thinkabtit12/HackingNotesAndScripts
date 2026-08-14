@@ -1,0 +1,2 @@
+php reverse shell script
+https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/refs/heads/master/php-reverse-shell.php

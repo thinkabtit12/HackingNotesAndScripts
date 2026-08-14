@@ -18,3 +18,8 @@ gobuster vhost -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt --appe
 check if targets running an active imap email service
 nmap -p 143,993 <TARGET_IP>
 (port 143 is standard imap, port 993 is secure imap)
+
+
+universal raw byte hex analyzer command:
+xxd <FILENAME> | head -n 20
+(for when u cant read a file at all)

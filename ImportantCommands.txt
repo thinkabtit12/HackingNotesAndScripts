@@ -37,3 +37,7 @@ head -n <LINE_COUNT> <FILE_NAME>
 
 netcat start listen command
 nc -lnvp <PORT>
+
+login by SSH if it fails once, but pretend you do not have keys at all:
+ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password <USER>@<TARGET_IP>
+

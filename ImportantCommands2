@@ -3,3 +3,6 @@ sudo python3 -m http.server 8000
 
 start netcat listener:
 sudo nc -lvnp 443
+
+shell stabilizer command (important for netcat so u dont accidentally exit)
+script /dev/null -c /bin/bash

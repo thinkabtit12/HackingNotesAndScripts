@@ -1,0 +1,3 @@
+See Port 445 open? Think wmiexec.py, psexec.py, or secretsdump.py.
+See Port 88 open? Think GetNPUsers.py or GetUserSPNs.py.
+See Port 1433 open? Think mssqlclient.py

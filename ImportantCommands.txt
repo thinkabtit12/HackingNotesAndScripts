@@ -70,7 +70,7 @@ find / -type f -name "*.bak" 2>/dev/null | wc -l
 (counts how many backup files exist on the target machine without cluttering the screen)
 
 connect to a remote Microsoft SQL database command:
-mssqlclient.py <USERNAME>@<TARGET_IP> -windows-auth
+impacket-mssqlclient.py <USERNAME>@<TARGET_IP> -windows-auth
 (uses the impacket toolkit to open a database terminal. your prompt will change to SQL> if successful.)
 
 dump all windows usernames without a password command:

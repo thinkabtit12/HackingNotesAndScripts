@@ -7,3 +7,7 @@ RECONFIGURE;
 
 check if xp_cmdshell is active:
 EXEC xp_cmdshell 'net user';
+
+
+check if youre a sysadmin:
+SELECT IS_SRVROLEMEMBER('sysadmin');

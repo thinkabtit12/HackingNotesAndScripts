@@ -70,7 +70,7 @@ find / -type f -name "*.bak" 2>/dev/null | wc -l
 (counts how many backup files exist on the target machine without cluttering the screen)
 
 connect to a remote Microsoft SQL database command:
-impacket-mssqlclient <USERNAME>@<TARGET_IP> -windows-auth
+mssqlclient <USERNAME>@<TARGET_IP> -windows-auth
 (uses the impacket toolkit to open a database terminal. your prompt will change to SQL> if successful.)
 
 dump all windows usernames without a password command:
@@ -82,11 +82,6 @@ alternative username discovery command (rpcclient):
 [TARGET: Windows (Easy / Legacy) | RUN FROM: Kali Linux]
 rpcclient -U "" -N <TARGET_IP>
 (connects quietly using old school RPC. if it drops you into a prompt, type 'enumdomusers' to print all system account names)
-
-connect to a remote Microsoft SQL database command:
-[TARGET: Windows (SQL Servers) | RUN FROM: Kali Linux]
-mssqlclient.py <USERNAME>@<TARGET_IP> -windows-auth
-(uses the impacket toolkit to open a database terminal. your prompt will change to SQL> if successful.)
 
 modern kerberos username enumeration command (kerbrute):
 [TARGET: Windows Active Directory (Modern Real-World) | RUN FROM: Kali Linux]

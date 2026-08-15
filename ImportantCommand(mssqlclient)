@@ -11,3 +11,7 @@ EXEC xp_cmdshell 'net user';
 
 check if youre a sysadmin:
 SELECT IS_SRVROLEMEMBER('sysadmin');
+
+
+check what user you are
+xp_cmdshell "whoami"

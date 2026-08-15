@@ -41,3 +41,6 @@ nc -lnvp <PORT>
 login by SSH if it fails once, but pretend you do not have keys at all:
 ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password <USER>@<TARGET_IP>
 
+smbclient connect command:
+smbclient //<TARGET_IP>/backups -N
+

@@ -1,0 +1,5 @@
+start simple HTTP server:
+sudo python3 -m http.server 8000
+
+start netcat listener:
+sudo nc -lvnp 443

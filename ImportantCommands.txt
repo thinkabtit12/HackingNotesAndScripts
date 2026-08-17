@@ -42,11 +42,11 @@ login by SSH if it fails once, but pretend you do not have keys at all:
 ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password <USER>@<TARGET_IP>
 
 smbclient connect command:
-smbclient //<TARGET_IP>/backups -N
+smbclient //<TARGET_IP>/<SHARE> -N
 
 check shared folders over SMB anonymously (without password) command:
 smbclient -L //<TARGET_IP>/ -N
-(use this first to see the list of folders. ignore shares ending in $ as they are admin locked. target the custom ones.)
+(use this first to see the list of shares. ignore shares ending in $ as they are admin locked. target the custom ones.)
 
 smbclient share downloader commands:
 (once inside the smb shell with the smb: \> prompt, use these 3 commands)

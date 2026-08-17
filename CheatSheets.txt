@@ -14,3 +14,49 @@ What it does: Checks if the target environment exposes a MailHog testing dashboa
 HOW TO EXTRACT REUSABLE CREDENTIAL PATTERNS
 Strategy: When you find low-level system passwords (like IMAP_PASSWORD or DB_PASSWORD) in a config file, always document them to test for "Credential Stuffing/Password Reuse" across every open login panel and SSH.
 
+
+=== STANDARD RECON MATRIX ===
+
+PORT 80 (HTTP) / PORT 443 (HTTPS)
+- Service: Web Server (Apache, Nginx, IIS)
+- Action: Open in browser. Check source code comments.
+- Action: Run gobuster dir and gobuster vhost. 
+- Action: Fuzz parameters if you hit a 500 error code.
+
+PORT 21 (FTP)
+- Service: File Transfer Protocol
+- Action: Test anonymous login (anonymous : anonymous).
+- Action: Check for config backups or credential text leaks.
+
+PORT 22 (SSH)
+- Service: Secure Shell (Remote Linux Terminal)
+- Action: Use to gain entry after sniffing passwords via Web/SMB.
+- Action: If public key error hits, append -o PubkeyAuthentication=no.
+
+PORT 139 / PORT 445 (SMB)
+- Service: Server Message Block (File Sharing)
+- Action: Run smbclient -L //IP/ -N to list shares anonymously.
+- Action: Connect via smbclient //IP/SHARE -N and get files.
+
+PORT 1433 (MSSQL)
+- Service: Microsoft SQL Server
+- Action: Use mssqlclient.py to connect.
+- Action: Check sysadmin status and trigger xp_cmdshell.
+
+PORT 3306 (MySQL)
+- Service: MySQL Database
+- Action: Test default logins like root with a blank password.
+- Action: Use to leak data if web app input is vulnerable to SQLi.
+
+PORT 25 (SMTP)
+- Service: Mail Routing
+- Action: Use VRFY or EXPN commands to enumerate system usernames.
+
+PORT 143 / PORT 993 (IMAP/IMAPS)
+- Service: Internal Email Retrieval
+- Action: Test for credential stuffing if you find a DB password.
+
+PORT 8025 (MailHog)
+- Service: Developer Test Webmail Interface
+- Action: Visit http://IP:8025 in a browser.
+- Action: Read internal system mail / cleartext tokens directly.

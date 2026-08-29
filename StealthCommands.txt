@@ -1,5 +1,5 @@
 ========================================================================
-    STEALTH INFORMATION BREACH CHEATSHEET (WRITTEN BY DEVNULL606)
+             THE 9/10 ATTRIBUTION-MASKING PLAYBOOK (COMPLETE)
 ========================================================================
 
 ------------------------------------------------------------------------
@@ -31,43 +31,76 @@ PHASE 1: PURELY PASSIVE OSINT (Run from Web Browser or Local Machine)
 
 
 ------------------------------------------------------------------------
-PHASE 2: CLOUD BURNER ENGINE SETUP (Run on newly deployed Cloud VPS)
-* Goal: Set up an external server that cannot be traced to the source IP.
+PHASE 2: CLOUD BURNER ENGINE DEPLOYMENT (Run from Local Terminal)
+* Goal: Provision a temporary cloud interface using a CLI tool.
 ------------------------------------------------------------------------
-1. Deploy an ephemeral Ubuntu/Debian instance on AWS, DigitalOcean, or Linode.
-2. SSH into the cloud instance and configure the tools:
+[OPTION A: USING DIGITALOCEAN CLI (doctl)]
+1. Install and authenticate doctl on the local machine:
+   sudo apt install doctl -y
+   doctl auth init (Paste personal API token when prompted)
 
-   # Update the cloud server's package repository
-   sudo apt update && sudo apt upgrade -y
+2. Create a temporary SSH key pair locally:
+   ssh-keygen -t ed25519 -f ~/.ssh/burner_key -N ""
 
-   # Install the necessary network analysis utilities
-   sudo apt install nmap curl dnsutils -y
+3. Import the temporary key to DigitalOcean:
+   doctl compute ssh-key import burner-key --public-key-file ~/.ssh/burner_key.pub
+
+4. Spin up a temporary Ubuntu Droplet (Get the ID of your imported key first via 'doctl compute ssh-key list'):
+   doctl compute droplet create --region nyc3 --size s-1vcpu-1gb --image ubuntu-22-04-x64 --ssh-keys [KEY_ID] burner-vps
+
+5. Fetch the newly created public cloud IP address:
+   doctl compute droplet list
+
+[OPTION B: USING AWS CLI (aws-cli)]
+1. Spin up an Ubuntu EC2 instance directly via CLI (Assumes aws configure is set):
+   aws ec2 create-key-pair --key-name burner-key --query 'KeyMaterial' --output text > ~/.ssh/burner_key.pem && chmod 400 ~/.ssh/burner_key.pem
+   aws ec2 run-instances --image-id ami-0fc5d935ebf8bc3bc --count 1 --instance-type t2.micro --key-name burner-key --query 'Instances[0].InstanceId'
+
+2. Fetch the newly created public cloud IP address (Replace [Instance_ID]):
+   aws ec2 describe-instances --instance-ids [Instance_ID] --query 'Reservations[0].Instances[0].PublicIpAddress'
+
+[CONNECT TO VPS VIA SSH]
+   # Use the key generated to securely log into the remote infrastructure
+   ssh -i ~/.ssh/burner_key ubuntu@[Cloud_VPS_IP]
 
 
 ------------------------------------------------------------------------
-PHASE 3: ACTIVE CLOUD SCANS (Run ONLY from the Cloud VPS Terminal)
+PHASE 3: ENVIRONMENT SETUP & SCANS (Run ONLY inside the Cloud VPS Terminal)
 * Goal: Real-time scan data. Target firewall logs the Cloud IP, NOT the source.
 ------------------------------------------------------------------------
-# 1. Fast Comprehensive Scan (Top 1000 ports, OS versions, safe scripts)
+# 1. Update system package directories
+sudo apt update && sudo apt upgrade -y
+
+# 2. Install network utilities
+sudo apt install nmap curl dnsutils -y
+
+# 3. Fast Comprehensive Scan (Top 1000 ports, OS versions, safe scripts)
 nmap -A -Pn -T4 [Target_IP] -oN live_scan_results.txt
 
-# 2. Full Port Sweep (Find hidden services on non-standard ports)
+# 4. Full Port Sweep (Find hidden services on non-standard ports)
 nmap -p- --open -Pn -T4 [Target_IP] -oN full_port_results.txt
 
-# 3. Targeted Vulnerability Check (Cross-reference open ports against CVEs)
+# 5. Targeted Vulnerability Check (Cross-reference open ports against CVEs)
 nmap --script vuln -Pn [Target_IP] -oN vuln_assessment.txt
 
 
 ------------------------------------------------------------------------
-PHASE 4: EXFILTRATION, TRACK WIPING, & DESTRUCTION
+PHASE 4: EXFILTRATION, TRACK WIPING, & DESTRUCTION (Run to finish)
 * Goal: Safely pull the data, wipe trails on the VPS, and delete the server.
 ------------------------------------------------------------------------
-1. View the data on the Cloud VPS terminal (Copy-paste the output to the final report):
+1. View and copy the collected data back to the local analysis environment:
    cat live_scan_results.txt full_port_results.txt vuln_assessment.txt
 
-2. Erase command trails inside the Cloud VPS terminal before leaving:
-   history -c && rm ~/.bash_history
+2. Clear operational logs inside the Cloud VPS terminal:
+   history -c && rm ~/.bash_history && exit
 
-3. CRITICAL LAST STEP:
-   Go to the web provider console (AWS/DigitalOcean) and click "Terminate", "Delete", or "Destroy" on the virtual instance. 
-   This releases the IP back into the public pool and eliminates the infrastructure.
+3. DESTROY THE EVIDENCE (Run from Local Terminal to wipe the infrastructure):
+   
+   # For DigitalOcean (Replace [Droplet_ID]):
+   doctl compute droplet delete [Droplet_ID] --force
+   
+   # For AWS (Replace [Instance_ID]):
+   aws ec2 terminate-instances --instance-ids [Instance_ID]
+   
+   # Clean up local keys
+   rm ~/.ssh/burner_key*

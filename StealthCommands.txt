@@ -1,0 +1,3 @@
+nmap scan with no tracing back to you
+proxychains4 nmap -sT -Pn -p 80,443 target_ip
+

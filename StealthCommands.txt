@@ -1,28 +1,46 @@
 ========================================================================
-          STEALTH INFO EXTRACTOR (WRITTEN BY DEVNULL606)
+          DEV'S PAGE OF STEALTH RED TEAM ATTACKING 
 ========================================================================
 
-STEP 1: FORCED LIVE SCANS VIA THIRD-PARTY INFRASTRUCTURE
 ------------------------------------------------------------------------
-1. Go to Hackertarget.com -> Select "Nmap Online" -> Enter Target IP.
-   - Run the live test. 
-   - Footprint: Logged as Hackertarget infrastructure.
-
-2. Go to Pentest-Tools.com -> Choose "Find Open Ports" (Free Light Scan).
-   - Run the live test.
-   - Footprint: Logged as Pentest-Tools infrastructure.
-
-3. Log into Shodan.io -> Submit a "Refresh/Rescan" request for the IP.
-   - Forces an immediate live update of the port profile.
-
-STEP 2: CERTIFICATE TRANSPARENCY & SUBDOMAIN RECON
+PHASE 1: NETWORK AND ATTRIBUTION INFRASTRUCTURE ANALYSIS
+* Objective: Determine network ownership, IP blocks, and routing paths.
 ------------------------------------------------------------------------
-1. Go to crt.sh -> Search the IP or suspected parent domains.
-   - Extract: Subject Alternative Names (SANs) and hidden subdomains.
-2. Go to SecurityTrails.com (Free Account) -> Run historical DNS check.
-   - Extract: Past DNS records pointing to this exact IP.
+# 1. Query regional internet registries for ISP and network allocation details
+whois [Target_IP]
 
-STEP 3: ADVANCED ROUTING & BGP RECON
+# 2. Query upstream DNS infrastructure for verification of network mapping
+host -v [Target_IP]
+
+
 ------------------------------------------------------------------------
-1. Go to bgp.he.net -> Enter Target IP.
-   - Extract: ASN Number, IP Prefix blocks, and upstream peers.
+PHASE 2: DIRECTORY-BASED SERVICE AND PORT ANALYSIS
+* Objective: Retrieve indexed port states, banners, and vulnerabilities.
+------------------------------------------------------------------------
+# 1. Install the standardized command-line engine for Shodan queries
+sudo apt update && sudo apt install python3-shodan -y
+
+# 2. Link the environment to the access token (requires free registration)
+shodan init [API_KEY]
+
+# 3. Pull historical port status, service banners, and associated CVEs
+shodan host [Target_IP]
+
+
+------------------------------------------------------------------------
+PHASE 3: ENCRYPTION AND CERTIFICATE EXTRACTION
+* Objective: Analyze cryptographic configuration for domain exposure.
+------------------------------------------------------------------------
+# 1. Extract Common Name (CN) and Subject Alternative Names (SANs) from Port 443
+curl -vI https://[Target_IP] 2>&1 | grep -i -E "subject|issuer|alternate"
+
+
+------------------------------------------------------------------------
+PHASE 4: MULTI-SOURCE INTEGRATION AND AUTOMATION
+* Objective: Aggregate data streams across multiple passive platforms.
+------------------------------------------------------------------------
+# 1. Install an open-source OSINT framework designed for passive aggregation
+sudo apt install spiderfoot -y
+
+# 2. Execute a passive scan using only non-interactive data modules
+spiderfoot -m s_shodan,s_censys,s_whois,s_securitytrails -s [Target_IP]

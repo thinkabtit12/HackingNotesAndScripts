@@ -10,3 +10,13 @@ In your Kali terminal, run: whois [His_Public_IP] (or use an online WHOIS tool)
 If Shodan showed that port 443 (HTTPS) or any other encrypted port is open, the SSL certificate itself contains massive clues. (You can view this directly inside the Shodan/Censys results).
 What you will extract:
 Common Name (CN): The exact domain name the certificate was issued for.Alternative Names (SANs): Internal or hidden subdomains associated with targets infrastructure that they thought no one knew about.
+
+# 1. Gather ISP, Network Range, and Registration Details
+whois [Target_IP]
+
+# 2. Query DNS records via public servers to check for subdomains or mail servers
+host [Target_IP]
+
+# 3. Pull SSL Certificate information directly via terminal (if port 443 is open)
+# This extracts the Common Name (CN) and Subject Alternative Names (SANs) safely
+curl -vI https://[Target_IP] 2>&1 | grep -i "subject"

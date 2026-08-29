@@ -1,46 +1,67 @@
 ========================================================================
-          DEV'S PAGE OF STEALTH RED TEAM ATTACKING 
+      PROCESS OF STEALTH ATTACKING AN IP (BY DEVNULL606)
 ========================================================================
 
 ------------------------------------------------------------------------
 PHASE 1: NETWORK AND ATTRIBUTION INFRASTRUCTURE ANALYSIS
 * Objective: Determine network ownership, IP blocks, and routing paths.
+* Execution: Run sequentially from a single terminal prompt.
 ------------------------------------------------------------------------
 # 1. Query regional internet registries for ISP and network allocation details
-whois [Target_IP]
+# Output saved to net_profile.txt
+whois [Target_IP] > net_profile.txt
 
 # 2. Query upstream DNS infrastructure for verification of network mapping
-host -v [Target_IP]
+# Output saved to dns_mapping.txt
+host -v [Target_IP] > dns_mapping.txt
 
 
 ------------------------------------------------------------------------
 PHASE 2: DIRECTORY-BASED SERVICE AND PORT ANALYSIS
 * Objective: Retrieve indexed port states, banners, and vulnerabilities.
+* Execution: Execute following verification of the access token.
 ------------------------------------------------------------------------
 # 1. Install the standardized command-line engine for Shodan queries
 sudo apt update && sudo apt install python3-shodan -y
 
-# 2. Link the environment to the access token (requires free registration)
-shodan init [API_KEY]
+# 2. Link the local environment to the passive search engine access token
+shodan init [YOUR_FREE_API_KEY]
 
 # 3. Pull historical port status, service banners, and associated CVEs
-shodan host [Target_IP]
+# Output saved to shodan_dump.txt
+shodan host [Target_IP] > shodan_dump.txt
 
 
 ------------------------------------------------------------------------
 PHASE 3: ENCRYPTION AND CERTIFICATE EXTRACTION
 * Objective: Analyze cryptographic configuration for domain exposure.
+* Execution: Verifies SSL/TLS identity metadata on active secure web ports.
 ------------------------------------------------------------------------
-# 1. Extract Common Name (CN) and Subject Alternative Names (SANs) from Port 443
-curl -vI https://[Target_IP] 2>&1 | grep -i -E "subject|issuer|alternate"
+# 1. Extract Common Name (CN) and Subject Alternative Names (SANs) via Port 443
+# Verbose TLS handshake errors are merged into standard output for filtering
+# Output saved to crypto_certs.txt
+curl -vI https://[Target_IP] 2>&1 | grep -i -E "subject|issuer|alternate" > crypto_certs.txt
 
 
 ------------------------------------------------------------------------
 PHASE 4: MULTI-SOURCE INTEGRATION AND AUTOMATION
 * Objective: Aggregate data streams across multiple passive platforms.
+* Execution: Consolidated multi-module database capture.
 ------------------------------------------------------------------------
 # 1. Install an open-source OSINT framework designed for passive aggregation
 sudo apt install spiderfoot -y
 
 # 2. Execute a passive scan using only non-interactive data modules
-spiderfoot -m s_shodan,s_censys,s_whois,s_securitytrails -s [Target_IP]
+# Output saved to spiderfoot_recon.txt
+spiderfoot -m s_shodan,s_censys,s_whois,s_securitytrails -s [Target_IP] > spiderfoot_recon.txt
+
+
+------------------------------------------------------------------------
+PHASE 5: LOG VERIFICATION AND RECONNAISSANCE REVIEW
+* Objective: Validate that all output files were correctly populated.
+------------------------------------------------------------------------
+# 1. List directory contents to ensure all data files exist
+ls -l *.txt
+
+# 2. Read specific findings inside any generated log (Example: Shodan output)
+cat shodan_dump.txt

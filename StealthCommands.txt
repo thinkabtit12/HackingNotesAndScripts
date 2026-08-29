@@ -1,5 +1,4 @@
-nmap scan with no tracing back to you
-proxychains4 nmap -sT -Pn -p 80,443 target_ip
+
 
 Go to Shodan.io and paste the public IP directly into the search bar.
 Go to Censys.com, select the Hosts tab, and search the IP.

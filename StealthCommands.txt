@@ -1,106 +1,28 @@
 ========================================================================
-             THE 9/10 ATTRIBUTION-MASKING PLAYBOOK (COMPLETE)
+          STEALTH INFO EXTRACTOR (WRITTEN BY DEVNULL606)
 ========================================================================
 
+STEP 1: FORCED LIVE SCANS VIA THIRD-PARTY INFRASTRUCTURE
 ------------------------------------------------------------------------
-PHASE 1: PURELY PASSIVE OSINT (Run from Web Browser or Local Machine)
-* Goal: Get baseline data without sending packets directly to the target.
+1. Go to Hackertarget.com -> Select "Nmap Online" -> Enter Target IP.
+   - Run the live test. 
+   - Footprint: Logged as Hackertarget infrastructure.
+
+2. Go to Pentest-Tools.com -> Choose "Find Open Ports" (Free Light Scan).
+   - Run the live test.
+   - Footprint: Logged as Pentest-Tools infrastructure.
+
+3. Log into Shodan.io -> Submit a "Refresh/Rescan" request for the IP.
+   - Forces an immediate live update of the port profile.
+
+STEP 2: CERTIFICATE TRANSPARENCY & SUBDOMAIN RECON
 ------------------------------------------------------------------------
-1. Open Browser: Go to Shodan.io -> Paste Target IP in search bar.
-   - Target data: Open ports, service versions, CVE vulnerabilities.
-   
-2. Open Browser: Go to Censys.com -> Select "Hosts" -> Search Target IP.
-   - Target data: Operating System guesses, historical port status.
+1. Go to crt.sh -> Search the IP or suspected parent domains.
+   - Extract: Subject Alternative Names (SANs) and hidden subdomains.
+2. Go to SecurityTrails.com (Free Account) -> Run historical DNS check.
+   - Extract: Past DNS records pointing to this exact IP.
 
-3. Open Browser: Go to ViewDNS.info -> Use "Reverse IP Lookup" -> Enter IP.
-   - Target data: Any domains or subdomains pointed at this IP.
-
-4. Check SSL Certificate (If port 443/HTTPS is open on Shodan/Censys):
-   - Common Name (CN): The primary domain name.
-   - Subject Alternative Names (SANs): Hidden subdomains or internal names.
-
-5. Local Terminal Passive Queries:
-   # Gather ISP, Network Range, and Registration Details
-   whois [Target_IP]
-
-   # Query DNS records via public servers to check for subdomains or mail servers
-   host [Target_IP]
-
-   # Safely grab SSL data without a browser (if port 443 is open)
-   curl -vI https://[Target_IP] 2>&1 | grep -i "subject"
-
-
+STEP 3: ADVANCED ROUTING & BGP RECON
 ------------------------------------------------------------------------
-PHASE 2: CLOUD BURNER ENGINE DEPLOYMENT (Run from Local Terminal)
-* Goal: Provision a temporary cloud interface using a CLI tool.
-------------------------------------------------------------------------
-[OPTION A: USING DIGITALOCEAN CLI (doctl)]
-1. Install and authenticate doctl on the local machine:
-   sudo apt install doctl -y
-   doctl auth init (Paste personal API token when prompted)
-
-2. Create a temporary SSH key pair locally:
-   ssh-keygen -t ed25519 -f ~/.ssh/burner_key -N ""
-
-3. Import the temporary key to DigitalOcean:
-   doctl compute ssh-key import burner-key --public-key-file ~/.ssh/burner_key.pub
-
-4. Spin up a temporary Ubuntu Droplet (Get the ID of your imported key first via 'doctl compute ssh-key list'):
-   doctl compute droplet create --region nyc3 --size s-1vcpu-1gb --image ubuntu-22-04-x64 --ssh-keys [KEY_ID] burner-vps
-
-5. Fetch the newly created public cloud IP address:
-   doctl compute droplet list
-
-[OPTION B: USING AWS CLI (aws-cli)]
-1. Spin up an Ubuntu EC2 instance directly via CLI (Assumes aws configure is set):
-   aws ec2 create-key-pair --key-name burner-key --query 'KeyMaterial' --output text > ~/.ssh/burner_key.pem && chmod 400 ~/.ssh/burner_key.pem
-   aws ec2 run-instances --image-id ami-0fc5d935ebf8bc3bc --count 1 --instance-type t2.micro --key-name burner-key --query 'Instances[0].InstanceId'
-
-2. Fetch the newly created public cloud IP address (Replace [Instance_ID]):
-   aws ec2 describe-instances --instance-ids [Instance_ID] --query 'Reservations[0].Instances[0].PublicIpAddress'
-
-[CONNECT TO VPS VIA SSH]
-   # Use the key generated to securely log into the remote infrastructure
-   ssh -i ~/.ssh/burner_key ubuntu@[Cloud_VPS_IP]
-
-
-------------------------------------------------------------------------
-PHASE 3: ENVIRONMENT SETUP & SCANS (Run ONLY inside the Cloud VPS Terminal)
-* Goal: Real-time scan data. Target firewall logs the Cloud IP, NOT the source.
-------------------------------------------------------------------------
-# 1. Update system package directories
-sudo apt update && sudo apt upgrade -y
-
-# 2. Install network utilities
-sudo apt install nmap curl dnsutils -y
-
-# 3. Fast Comprehensive Scan (Top 1000 ports, OS versions, safe scripts)
-nmap -A -Pn -T4 [Target_IP] -oN live_scan_results.txt
-
-# 4. Full Port Sweep (Find hidden services on non-standard ports)
-nmap -p- --open -Pn -T4 [Target_IP] -oN full_port_results.txt
-
-# 5. Targeted Vulnerability Check (Cross-reference open ports against CVEs)
-nmap --script vuln -Pn [Target_IP] -oN vuln_assessment.txt
-
-
-------------------------------------------------------------------------
-PHASE 4: EXFILTRATION, TRACK WIPING, & DESTRUCTION (Run to finish)
-* Goal: Safely pull the data, wipe trails on the VPS, and delete the server.
-------------------------------------------------------------------------
-1. View and copy the collected data back to the local analysis environment:
-   cat live_scan_results.txt full_port_results.txt vuln_assessment.txt
-
-2. Clear operational logs inside the Cloud VPS terminal:
-   history -c && rm ~/.bash_history && exit
-
-3. DESTROY THE EVIDENCE (Run from Local Terminal to wipe the infrastructure):
-   
-   # For DigitalOcean (Replace [Droplet_ID]):
-   doctl compute droplet delete [Droplet_ID] --force
-   
-   # For AWS (Replace [Instance_ID]):
-   aws ec2 terminate-instances --instance-ids [Instance_ID]
-   
-   # Clean up local keys
-   rm ~/.ssh/burner_key*
+1. Go to bgp.he.net -> Enter Target IP.
+   - Extract: ASN Number, IP Prefix blocks, and upstream peers.
